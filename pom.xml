@@ -1494,5 +1494,41 @@
 			<artifactId>fastdoubleparser</artifactId>
 			<version>0.9.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jcuda</groupId>
+			<artifactId>jcuda</artifactId>
+			<version>10.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jcuda</groupId>
+			<artifactId>jcublas</artifactId>
+			<version>10.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jcuda</groupId>
+			<artifactId>jcufft</artifactId>
+			<version>10.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jcuda</groupId>
+			<artifactId>jcusparse</artifactId>
+			<version>10.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jcuda</groupId>
+			<artifactId>jcusolver</artifactId>
+			<version>10.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jcuda</groupId>
+			<artifactId>jcurand</artifactId>
+			<version>10.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jcuda</groupId>
+			<artifactId>jcudnn</artifactId>
+			<version>10.2.0</version>
+		</dependency>
+
 	</dependencies>
 </project>

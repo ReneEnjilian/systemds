@@ -313,6 +313,20 @@ public class SparseBlockMCSR extends SparseBlock
 	}
 
 	@Override
+	public  int nextNonZeroRowIndex(int r){
+		return 0;
+	}
+	@Override
+	public  int setSearchIndex(int r){
+		return 0;
+	}
+
+	@Override
+	public  int updateSearchIndex(int r){
+		return 0;
+	}
+
+	@Override
 	public boolean set(int r, int c, double v) {
 		if( !isAllocated(r) )
 			_rows[r] = new SparseRowScalar();

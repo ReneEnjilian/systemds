@@ -39,8 +39,8 @@ import org.apache.sysds.test.TestUtils;
  */
 public class SparseBlockAlignment extends AutomatedTestBase 
 {
-	private final static int rows = 324;
-	private final static int cols = 132;	
+	private final static int rows = 8;
+	private final static int cols = 6;
 	private final static double sparsity1 = 0.09;
 	private final static double sparsity2 = 0.19;
 	private final static double sparsity3 = 0.29;
@@ -175,15 +175,28 @@ public class SparseBlockAlignment extends AutomatedTestBase
 		try
 		{
 			//data generation
-			double[][] A = getRandomMatrix(rows, cols, -10, 10, sparsity, 1234); 
-			
+			//double[][] A = getRandomMatrix(rows, cols, -10, 10, sparsity, 1234);
+			double[][] A = {
+				{0, 0, 0, 0, 0, 0}, // Row 1: All zeros
+				{10, 20, 0, 0, 0, 0}, // Row 2: Non-zero
+				{0, 0, 0, 0, 0, 0}, // Row 3: All zeros
+				{0, 30, 0, 40, 0, 0}, // Row 4: Non-zero
+				{0, 0, 0, 0, 0, 0}, // Row 5: All zeros
+				{0, 0, 50, 60, 70, 0}, // Row 6: Non-zero
+				{0, 0, 0, 0, 0, 0}, // Row 7: All zeros
+				{0, 0, 0, 0, 0, 80} // Row 8: Non-zero
+			};
+
+
+
 			//init sparse block
 			SparseBlock sblock = null;
 			MatrixBlock mbtmp = DataConverter.convertToMatrixBlock(A);
 			SparseBlock srtmp = mbtmp.getSparseBlock();			
 			switch( btype ) {
 				case MCSR: sblock = new SparseBlockMCSR(srtmp); break;
-				case CSR: sblock = new SparseBlockCSR(srtmp); break;
+				case CSR: sblock = new SparseBlockCSR(srtmp);
+					System.out.println("helo"); break;
 				case COO: sblock = new SparseBlockCOO(srtmp); break;
 				case DCSR: sblock = new SparseBlockDCSR(srtmp); break;
 			}

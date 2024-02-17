@@ -339,6 +339,21 @@ public class SparseBlockCOO extends SparseBlock
 		return index;
 	}
 
+
+	@Override
+	public  int nextNonZeroRowIndex(int r){
+		return 0;
+	}
+	@Override
+	public  int setSearchIndex(int r){
+		return 0;
+	}
+
+	@Override
+	public  int updateSearchIndex(int r){
+		return 0;
+	}
+
 	@Override
 	public boolean set(int r, int c, double v) {
 		int pos = pos(r);

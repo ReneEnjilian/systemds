@@ -310,6 +310,12 @@ public abstract class SparseBlock implements Serializable, Block
 	
 	////////////////////////
 	//update operations
+
+	public abstract int nextNonZeroRowIndex(int r);
+
+	public abstract int setSearchIndex(int r);
+
+	public abstract int updateSearchIndex(int r);
 	
 	/**
 	 * Set the value of a matrix cell (r,c). This might update an existing 
@@ -715,5 +721,52 @@ public abstract class SparseBlock implements Serializable, Block
 				_curValues = values(_curRow);
 			}
 		}
+	}
+
+	private class SparseBlockIteratorOverRows implements Iterator<Integer>{
+		private int _rlen = 0; //row upper
+		private int _curRow = -1; //current row
+		private boolean _noNext = false; //end indicator
+
+		private int searchIndex = 0;
+
+		protected SparseBlockIteratorOverRows(int ru) {
+			_rlen = ru;
+			_curRow = 0;
+			setSearchIndex(ru);
+			findNextNonZeroRow();
+		}
+
+		protected SparseBlockIteratorOverRows(int rl, int ru) {
+			_rlen = ru;
+			_curRow = rl;
+			findNextNonZeroRow();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !_noNext;
+		}
+
+		@Override
+		public Integer next( ) {
+			int x = 0;
+			return x;
+		}
+
+		@Override
+		public void remove() {
+			throw new RuntimeException("SparseBlockIterator is unsupported!");
+		}
+
+		/**
+		 * Moves cursor to next non-zero row or indicates that no more
+		 * rows are available.
+		 */
+		private void findNextNonZeroRow() {
+			int nextNonZero = nextNonZeroRowIndex(_curRow);
+
+		}
+
 	}
 }

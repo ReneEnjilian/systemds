@@ -51,6 +51,7 @@ public class SparseBlockCSR extends SparseBlock
 	private int[] _indexes = null;   //column index array (size: >=nnz)
 	private double[] _values = null; //value array (size: >=nnz)
 	private int _size = 0;           //actual number of nnz
+
 	
 	public SparseBlockCSR(int rlen) {
 		this(rlen, INIT_CAPACITY);
@@ -118,6 +119,24 @@ public class SparseBlockCSR extends SparseBlock
 				_ptr[i+1]=pos;
 			}
 		}
+		/*
+		System.out.println("++++++++++++++++++++++++++");
+		System.out.println("*************************");
+		for(int i = 0; i<_ptr.length; i++){
+			System.out.println(_ptr[i]);
+		}
+		System.out.println("*************************");
+		for(int i = 0; i<_indexes.length; i++){
+			System.out.println(_indexes[i]);
+		}
+		System.out.println("*************************");
+		for(int i = 0; i<_values.length; i++){
+			System.out.println(_values[i]);
+		}
+		System.out.println("*************************");
+		System.out.println("++++++++++++++++++++++++++");
+		*/
+
 	}
 	
 	/**
@@ -449,6 +468,21 @@ public class SparseBlockCSR extends SparseBlock
 	public int pos(int r) {
 		return _ptr[r];
 	}
+
+	@Override
+	public  int nextNonZeroRowIndex(int r){
+		return 0;
+	}
+	@Override
+	public  int setSearchIndex(int r){
+		return 0;
+	}
+
+	@Override
+	public  int updateSearchIndex(int r){
+		return 0;
+	}
+
 
 	@Override
 	public boolean set(int r, int c, double v) {

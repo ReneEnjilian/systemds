@@ -153,6 +153,25 @@ public class SparseBlockDCSR extends SparseBlock
 				_rowptr[rowIdx+1] = pos;
 			}
 		}
+		System.out.println("++++++++++++++++++++++++++");
+		System.out.println("*************************");
+		for(int i = 0; i<_rowptr.length; i++){
+			System.out.println(_rowptr[i]);
+		}
+		System.out.println("*************************");
+		for(int i = 0; i<_rowidx.length; i++){
+			System.out.println(_rowidx[i]);
+		}
+		System.out.println("*************************");
+		for(int i = 0; i<_colidx.length; i++){
+			System.out.println(_colidx[i]);
+		}
+		System.out.println("*************************");
+		for(int i = 0; i<_values.length; i++){
+			System.out.println(_values[i]);
+		}
+		System.out.println("*************************");
+		System.out.println("++++++++++++++++++++++++++");
 	}
 
 	/**
@@ -324,6 +343,27 @@ public class SparseBlockDCSR extends SparseBlock
 			idx = Math.max(-idx - 2, 0);
 
 		return _rowptr[idx];
+	}
+
+	@Override
+	public  int nextNonZeroRowIndex(int r){
+		return 0;
+	}
+	@Override
+	public  int setSearchIndex(int r){
+		int insertionPoint=-1;
+		int result = Arrays.binarySearch(_rowidx, r);
+		if(result < 0) {
+			insertionPoint = -result - 1;
+			return insertionPoint;
+		}else{
+			return result;
+		}
+	}
+
+	@Override
+	public  int updateSearchIndex(int r){
+		return 0;
 	}
 
 	@Override

@@ -311,11 +311,11 @@ public abstract class SparseBlock implements Serializable, Block
 	////////////////////////
 	//update operations
 
-	public abstract int nextNonZeroRowIndex(int r);
+	public abstract int nextNonZeroRowIndex(int r, int ru);
 
 	public abstract int setSearchIndex(int r);
 
-	public abstract int updateSearchIndex(int r);
+	public abstract int updateSearchIndex(int r, int ru, int curRow);
 	
 	/**
 	 * Set the value of a matrix cell (r,c). This might update an existing 
@@ -558,6 +558,18 @@ public abstract class SparseBlock implements Serializable, Block
 		//default generic iterator, override if necessary
 		return new SparseBlockIterator(rl, Math.min(ru,numRows()));
 	}
+
+	public Iterator<Integer> getIteratorNonZeroRows(){
+		return new SparseBlockIteratorOverRows(numRows());
+	}
+
+	public Iterator<Integer> getIteratorNonZeroRows(int ru){
+		return new SparseBlockIteratorOverRows(ru);
+	}
+
+	public Iterator<Integer> getIteratorNonZeroRows(int rl, int ru){
+		return new SparseBlockIteratorOverRows(rl, ru);
+	}
 	
 	@Override 
 	public abstract String toString();
@@ -727,20 +739,20 @@ public abstract class SparseBlock implements Serializable, Block
 		private int _rlen = 0; //row upper
 		private int _curRow = -1; //current row
 		private boolean _noNext = false; //end indicator
-
-		private int searchIndex = 0;
+		private int _searchIndex = 0;
+		private int _previousSearchIndex = -1;
 
 		protected SparseBlockIteratorOverRows(int ru) {
 			_rlen = ru;
 			_curRow = 0;
-			setSearchIndex(ru);
-			findNextNonZeroRow();
+			_searchIndex = setSearchIndex(_curRow);
+			//System.out.println(_searchIndex);
 		}
 
 		protected SparseBlockIteratorOverRows(int rl, int ru) {
 			_rlen = ru;
 			_curRow = rl;
-			findNextNonZeroRow();
+			_searchIndex = setSearchIndex(_curRow);
 		}
 
 		@Override
@@ -750,8 +762,13 @@ public abstract class SparseBlock implements Serializable, Block
 
 		@Override
 		public Integer next( ) {
-			int x = 0;
-			return x;
+			_curRow = nextNonZeroRowIndex(_searchIndex, _rlen);
+			_previousSearchIndex = _searchIndex;
+			_searchIndex = updateSearchIndex(_previousSearchIndex, _rlen, _curRow);
+			if (_previousSearchIndex == _searchIndex){
+				_noNext = true;
+			}
+			return _curRow;
 		}
 
 		@Override
@@ -763,10 +780,7 @@ public abstract class SparseBlock implements Serializable, Block
 		 * Moves cursor to next non-zero row or indicates that no more
 		 * rows are available.
 		 */
-		private void findNextNonZeroRow() {
-			int nextNonZero = nextNonZeroRowIndex(_curRow);
 
-		}
 
 	}
 }

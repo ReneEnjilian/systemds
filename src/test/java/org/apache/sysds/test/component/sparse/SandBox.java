@@ -75,25 +75,46 @@ public class SandBox extends AutomatedTestBase {
 
 			//Assert.assertTrue(1==1);
 			//System.out.println(sblock.size());
-			Iterator<IJV> iter = sblock.getIterator();
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.next());
 
-			int insertionPoint=-1;
-			int[] test = {1,3,5,7};
-			int result = Arrays.binarySearch(test, 4);
-			if(result < 0) {
-				insertionPoint = -result - 1;
+			Iterator<Integer> iter = sblock.getIteratorNonZeroRows();
+			System.out.println(iter.next());
+			System.out.println(iter.next());
+			System.out.println(iter.next());
+			System.out.println(iter.next());
+			//System.out.println(iter.next());
+			//System.out.println(iter.next());
+
+
+
+
+			/*int[] arr = {0,0,2,2,4,4,7,7,8};
+
+			int result = Arrays.binarySearch(arr, 2);
+
+			if (result < 0) {
+				int insertionPoint = -result - 1;
 				System.out.println(insertionPoint);
 			}else{
 				System.out.println(result);
-			}
+			}*/
+
+			/*
+			Iterator<Integer> iter = sblock.getIteratorNonZeroRows(8);
+			while(iter.hasNext()){
+				System.out.println(iter.next());
+			}*/
+
+
+
+
+
+
+
+
+
+
+
+			//System.out.println(iter.next());
 
 
 		}

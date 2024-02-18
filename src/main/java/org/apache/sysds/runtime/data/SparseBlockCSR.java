@@ -470,17 +470,23 @@ public class SparseBlockCSR extends SparseBlock
 	}
 
 	@Override
-	public  int nextNonZeroRowIndex(int r){
-		return 0;
-	}
-	@Override
-	public  int setSearchIndex(int r){
-		return 0;
+	public  int nextNonZeroRowIndex(int r, int ru){
+		for(int i = r+1; i<=ru; i++){
+			if(_ptr[i]>_ptr[i-1]){
+				return i-1;
+			}
+		}
+		return r;
 	}
 
 	@Override
-	public  int updateSearchIndex(int r){
-		return 0;
+	public int setSearchIndex(int r){
+		return r;
+	}
+
+	@Override
+	public  int updateSearchIndex(int r, int ru, int curRow){
+		return curRow+1;
 	}
 
 

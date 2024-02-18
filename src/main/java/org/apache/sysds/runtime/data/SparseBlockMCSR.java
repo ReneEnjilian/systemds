@@ -313,7 +313,7 @@ public class SparseBlockMCSR extends SparseBlock
 	}
 
 	@Override
-	public  int nextNonZeroRowIndex(int r){
+	public  int nextNonZeroRowIndex(int r, int ru){
 		return 0;
 	}
 	@Override
@@ -322,7 +322,7 @@ public class SparseBlockMCSR extends SparseBlock
 	}
 
 	@Override
-	public  int updateSearchIndex(int r){
+	public  int updateSearchIndex(int r, int ru, int curRow){
 		return 0;
 	}
 

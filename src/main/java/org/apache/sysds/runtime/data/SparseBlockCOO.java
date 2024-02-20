@@ -350,7 +350,7 @@ public class SparseBlockCOO extends SparseBlock
 	}
 
 	@Override
-	public int updateSearchIndex(int r, int ru,  int curRow){
+	public int updateSearchIndex(int r, int ru){
 		return 0;
 	}
 

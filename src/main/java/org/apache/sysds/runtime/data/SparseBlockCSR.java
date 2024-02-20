@@ -485,8 +485,8 @@ public class SparseBlockCSR extends SparseBlock
 	}
 
 	@Override
-	public  int updateSearchIndex(int r, int ru, int curRow){
-		return curRow+1;
+	public  int updateSearchIndex(int r, int ru){
+		return ru+1;
 	}
 
 

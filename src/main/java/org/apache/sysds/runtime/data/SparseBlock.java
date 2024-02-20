@@ -315,7 +315,7 @@ public abstract class SparseBlock implements Serializable, Block
 
 	public abstract int setSearchIndex(int r);
 
-	public abstract int updateSearchIndex(int r, int ru, int curRow);
+	public abstract int updateSearchIndex(int r, int ru);
 	
 	/**
 	 * Set the value of a matrix cell (r,c). This might update an existing 
@@ -746,7 +746,7 @@ public abstract class SparseBlock implements Serializable, Block
 			_rlen = ru;
 			_curRow = 0;
 			_searchIndex = setSearchIndex(_curRow);
-			//System.out.println(_searchIndex);
+			System.out.println(_searchIndex);
 		}
 
 		protected SparseBlockIteratorOverRows(int rl, int ru) {
@@ -762,13 +762,22 @@ public abstract class SparseBlock implements Serializable, Block
 
 		@Override
 		public Integer next( ) {
-			_curRow = nextNonZeroRowIndex(_searchIndex, _rlen);
-			_previousSearchIndex = _searchIndex;
-			_searchIndex = updateSearchIndex(_previousSearchIndex, _rlen, _curRow);
-			if (_previousSearchIndex == _searchIndex){
-				_noNext = true;
+			if(SparseBlock.this instanceof SparseBlockDCSR) {
+				_curRow = nextNonZeroRowIndex(_searchIndex, _rlen);
+				_previousSearchIndex = _searchIndex;
+				_searchIndex = updateSearchIndex(_previousSearchIndex, _rlen);
+				if(_previousSearchIndex == _searchIndex) {
+					_noNext = true;
+				}
+				return _curRow;
 			}
-			return _curRow;
+			else if(SparseBlock.this instanceof SparseBlockCSR) {
+
+
+			}
+			return -1;
+
+
 		}
 
 		@Override

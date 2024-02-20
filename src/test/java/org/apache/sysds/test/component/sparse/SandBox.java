@@ -72,7 +72,7 @@ public class SandBox extends AutomatedTestBase {
 					sblock = new SparseBlockDCSR(srtmp);
 					break;
 			}
-
+			//System.out.println(SparseBlock.Type.DCSR.getClass().getName());
 			//Assert.assertTrue(1==1);
 			//System.out.println(sblock.size());
 

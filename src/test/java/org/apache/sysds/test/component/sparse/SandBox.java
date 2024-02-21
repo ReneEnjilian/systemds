@@ -76,13 +76,13 @@ public class SandBox extends AutomatedTestBase {
 			//Assert.assertTrue(1==1);
 			//System.out.println(sblock.size());
 
-			Iterator<Integer> iter = sblock.getIteratorNonZeroRows();
+			Iterator<Integer> iter = sblock.getIteratorNonZeroRows(0,7);
 			System.out.println(iter.next());
 			System.out.println(iter.next());
 			System.out.println(iter.next());
 			System.out.println(iter.next());
-			//System.out.println(iter.next());
-			//System.out.println(iter.next());
+			System.out.println(iter.next());
+			System.out.println(iter.hasNext());
 
 
 

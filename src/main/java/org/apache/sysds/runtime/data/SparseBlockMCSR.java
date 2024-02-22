@@ -317,7 +317,7 @@ public class SparseBlockMCSR extends SparseBlock
 		return 0;
 	}
 	@Override
-	public  int setSearchIndex(int r){
+	public  int setSearchIndex(int r, int ru){
 		return 0;
 	}
 

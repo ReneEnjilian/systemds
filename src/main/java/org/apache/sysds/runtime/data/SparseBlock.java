@@ -313,7 +313,7 @@ public abstract class SparseBlock implements Serializable, Block
 
 	public abstract int nextNonZeroRowIndex(int r, int ru);
 
-	public abstract int setSearchIndex(int r);
+	public abstract int setSearchIndex(int r, int ru);
 
 	public abstract int updateSearchIndex(int r, int ru);
 	
@@ -745,14 +745,23 @@ public abstract class SparseBlock implements Serializable, Block
 		protected SparseBlockIteratorOverRows(int ru) {
 			_rlen = ru;
 			_curRow = 0;
-			_searchIndex = setSearchIndex(_curRow);
+			_searchIndex = setSearchIndex(_curRow, ru);
 			//System.out.println(_searchIndex);
+			if(_searchIndex == -1){
+				_noNext = true;
+				System.out.println("hallo");
+			}
 		}
 
 		protected SparseBlockIteratorOverRows(int rl, int ru) {
 			_rlen = ru;
 			_curRow = rl;
-			_searchIndex = setSearchIndex(_curRow);
+			_searchIndex = setSearchIndex(_curRow, ru);
+			System.out.println(_searchIndex);
+			if(_searchIndex == -1){
+				_noNext = true;
+				System.out.println("hiiiii");
+			}
 		}
 
 		@Override
@@ -774,15 +783,14 @@ public abstract class SparseBlock implements Serializable, Block
 			}
 			else if(SparseBlock.this instanceof SparseBlockCSR) {
 				_curRow = nextNonZeroRowIndex(_searchIndex, _rlen);
-				_previousSearchIndex = _curRow;
 				_searchIndex = updateSearchIndex(_curRow, _rlen);
-				if(_curRow == _searchIndex) {
+				_searchIndex = setSearchIndex(_searchIndex, _rlen); // special case: single non-zero row
+				if(_curRow == _previousSearchIndex || _curRow==_searchIndex || _searchIndex==-1) {
 					_noNext = true;
+					_searchIndex=_curRow;
 				}
+				_previousSearchIndex = _curRow;
 				return _curRow;
-
-
-
 			}
 			return 0;
 		}

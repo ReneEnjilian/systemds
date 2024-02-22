@@ -351,7 +351,7 @@ public class SparseBlockDCSR extends SparseBlock
 		return _rowidx[r];
 	}
 	@Override
-	public int setSearchIndex(int r){
+	public int setSearchIndex(int r, int ru){
 		int insertionPoint=-1;
 		int result = Arrays.binarySearch(_rowidx, r);
 		if(result < 0) {

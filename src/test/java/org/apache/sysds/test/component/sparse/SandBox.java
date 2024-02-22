@@ -54,10 +54,31 @@ public class SandBox extends AutomatedTestBase {
 				{0, 0, 0, 0, 0, 80} // Row 8: Non-zero
 			};
 
+			double[][] B = {{0, 0, 0, 0, 0, 0}, // Row 1: All zeros
+				{10, 20, 0, 0, 0, 0}, // Row 2: Non-zero
+				{0, 0, 0, 0, 0, 0}, // Row 3: All zeros
+				{0, 30, 0, 40, 0, 0}, // Row 4: Non-zero
+				{0, 0, 0, 0, 0, 0}, // Row 5: All zeros
+				{0, 0, 50, 60, 70, 0}, // Row 6: Non-zero
+				{0, 0, 0, 0, 0, 75}, // Row 7: All zeros
+				{0, 0, 0, 0, 0, 80} // Row 8: Non-zero
+			};
+
+			double[][] C = {{0, 0, 0, 0, 0, 0}, // Row 1: All zeros
+				{0, 0, 0, 0, 0, 0}, // Row 2: Non-zero
+				{0, 0, 0, 0, 0, 0}, // Row 3: All zeros
+				{0, 0, 0, 0, 0, 0}, // Row 4: Non-zero
+				{0, 0, 0, 0, 0, 0}, // Row 5: All zeros
+				{0, 0, 0, 0, 0, 0}, // Row 6: Non-zero
+				{0, 0, 0, 0, 0, 0}, // Row 7: All zeros
+				{0, 0, 0, 0, 0, 0} // Row 8: Non-zero
+			};
+
 			//init sparse block
 			SparseBlock sblock = null;
-			MatrixBlock mbtmp = DataConverter.convertToMatrixBlock(A);
+			MatrixBlock mbtmp = DataConverter.convertToMatrixBlock(C);
 			SparseBlock srtmp = mbtmp.getSparseBlock();
+			System.out.println("salam");
 			switch(btype) {
 				case MCSR:
 					sblock = new SparseBlockMCSR(srtmp);
@@ -75,45 +96,13 @@ public class SandBox extends AutomatedTestBase {
 			//System.out.println(SparseBlock.Type.DCSR.getClass().getName());
 			//Assert.assertTrue(1==1);
 			//System.out.println(sblock.size());
+			System.out.println("salame");
 
-			Iterator<Integer> iter = sblock.getIteratorNonZeroRows(0,7);
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.next());
-			System.out.println(iter.hasNext());
-
-
-
-
-			/*int[] arr = {0,0,2,2,4,4,7,7,8};
-
-			int result = Arrays.binarySearch(arr, 2);
-
-			if (result < 0) {
-				int insertionPoint = -result - 1;
-				System.out.println(insertionPoint);
-			}else{
-				System.out.println(result);
-			}*/
-
-			/*
-			Iterator<Integer> iter = sblock.getIteratorNonZeroRows(8);
+			Iterator<Integer> iter = sblock.getIteratorNonZeroRows(0,8);
 			while(iter.hasNext()){
 				System.out.println(iter.next());
-			}*/
-
-
-
-
-
-
-
-
-
-
-
+			}
+			//System.out.println(iter.hasNext());
 			//System.out.println(iter.next());
 
 

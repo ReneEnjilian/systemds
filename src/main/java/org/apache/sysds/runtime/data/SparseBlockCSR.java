@@ -477,21 +477,27 @@ public class SparseBlockCSR extends SparseBlock
 				return i;
 			}
 		}
-		if(r+1 == ru){
-			return r;
-		}else {
-			return r+1;
-		}
+		return r-1;
+
 	}
 
 	@Override
-	public int setSearchIndex(int r){
+	public int setSearchIndex(int r, int ru){
+		System.out.println("1");
+		if(_ptr[r] == _ptr[ru]){
+			System.out.println("2");
+			return -1; //zero matrix
+		}
+		System.out.println("3");
 		return r;
 	}
 
 	@Override
 	public  int updateSearchIndex(int r, int ru){
-		if(r+1 == ru){
+		if(r+2==ru && _ptr[r+1] == _ptr[r+2]){
+			return r;
+		}
+		else if(r+1 == ru){
 			return r;
 		}else {
 			return r+1;

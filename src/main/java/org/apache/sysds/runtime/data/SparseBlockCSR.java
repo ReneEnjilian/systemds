@@ -483,12 +483,9 @@ public class SparseBlockCSR extends SparseBlock
 
 	@Override
 	public int setSearchIndex(int r, int ru){
-		System.out.println("1");
 		if(_ptr[r] == _ptr[ru]){
-			System.out.println("2");
 			return -1; //zero matrix
 		}
-		System.out.println("3");
 		return r;
 	}
 

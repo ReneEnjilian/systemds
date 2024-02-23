@@ -351,6 +351,10 @@ public class SparseBlockCOO extends SparseBlock
 
 	@Override
 	public int updateSearchIndex(int r, int ru){
+		System.out.println("*************");
+		for(int i = 0; i<_rindexes.length; i++){
+			System.out.println(_rindexes[i]);
+		}
 		return 0;
 	}
 

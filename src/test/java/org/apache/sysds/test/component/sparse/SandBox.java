@@ -37,7 +37,7 @@ public class SandBox extends AutomatedTestBase {
 	
 	@Test
 	public void executeTest(){
-		testMethod(SparseBlock.Type.CSR, false);
+		testMethod(SparseBlock.Type.COO, false);
 	}
 	private void testMethod( SparseBlock.Type btype, boolean partial)
 	{
@@ -50,7 +50,7 @@ public class SandBox extends AutomatedTestBase {
 				{0, 30, 0, 40, 0, 0}, // Row 4: Non-zero
 				{0, 0, 0, 0, 0, 0}, // Row 5: All zeros
 				{0, 0, 50, 60, 70, 0}, // Row 6: Non-zero
-				{0, 0, 0, 0, 0, 0}, // Row 7: All zeros
+				{0, 0, 0, 0, 00, 0}, // Row 7: All zeros
 				{0, 0, 0, 0, 0, 80} // Row 8: Non-zero
 			};
 
@@ -71,14 +71,13 @@ public class SandBox extends AutomatedTestBase {
 				{0, 0, 0, 0, 0, 0}, // Row 5: All zeros
 				{0, 0, 0, 0, 0, 0}, // Row 6: Non-zero
 				{0, 0, 0, 0, 0, 0}, // Row 7: All zeros
-				{0, 0, 0, 0, 0, 0} // Row 8: Non-zero
+				{0, 0, 0, 0, 0, 70} // Row 8: Non-zero
 			};
 
 			//init sparse block
 			SparseBlock sblock = null;
-			MatrixBlock mbtmp = DataConverter.convertToMatrixBlock(C);
+			MatrixBlock mbtmp = DataConverter.convertToMatrixBlock(A);
 			SparseBlock srtmp = mbtmp.getSparseBlock();
-			System.out.println("salam");
 			switch(btype) {
 				case MCSR:
 					sblock = new SparseBlockMCSR(srtmp);
@@ -96,7 +95,6 @@ public class SandBox extends AutomatedTestBase {
 			//System.out.println(SparseBlock.Type.DCSR.getClass().getName());
 			//Assert.assertTrue(1==1);
 			//System.out.println(sblock.size());
-			System.out.println("salame");
 
 			Iterator<Integer> iter = sblock.getIteratorNonZeroRows(0,8);
 			while(iter.hasNext()){

@@ -50,7 +50,7 @@ public class SandBox extends AutomatedTestBase {
 				{0, 30, 0, 40, 0, 0}, // Row 4: Non-zero
 				{0, 0, 0, 0, 0, 0}, // Row 5: All zeros
 				{0, 0, 50, 60, 70, 0}, // Row 6: Non-zero
-				{0, 0, 0, 0, 00, 0}, // Row 7: All zeros
+				{0, 0, 0, 0, 0, 0}, // Row 7: All zeros
 				{0, 0, 0, 0, 0, 80} // Row 8: Non-zero
 			};
 
@@ -76,7 +76,7 @@ public class SandBox extends AutomatedTestBase {
 
 			//init sparse block
 			SparseBlock sblock = null;
-			MatrixBlock mbtmp = DataConverter.convertToMatrixBlock(A);
+			MatrixBlock mbtmp = DataConverter.convertToMatrixBlock(C);
 			SparseBlock srtmp = mbtmp.getSparseBlock();
 			switch(btype) {
 				case MCSR:
@@ -97,10 +97,10 @@ public class SandBox extends AutomatedTestBase {
 			//System.out.println(sblock.size());
 
 			Iterator<Integer> iter = sblock.getIteratorNonZeroRows(0,8);
+			//System.out.println(iter.next());
 			while(iter.hasNext()){
 				System.out.println(iter.next());
 			}
-			//System.out.println(iter.hasNext());
 			//System.out.println(iter.next());
 
 

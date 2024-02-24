@@ -356,8 +356,14 @@ public class SparseBlockDCSR extends SparseBlock
 		int result = Arrays.binarySearch(_rowidx, r);
 		if(result < 0) {
 			insertionPoint = -result - 1;
+			if (_rowidx[insertionPoint] == ru) {
+				return -1; // Return -1 if insertionPoint is ru
+			}
 			return insertionPoint;
 		}else{
+			if (_rowidx[result] == ru) {
+				return -1; // Return -1 if insertionPoint is ru
+			}
 			return result;
 		}
 	}

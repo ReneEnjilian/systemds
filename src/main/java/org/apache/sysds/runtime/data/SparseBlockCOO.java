@@ -342,20 +342,37 @@ public class SparseBlockCOO extends SparseBlock
 
 	@Override
 	public int nextNonZeroRowIndex(int r, int ru){
-		return 0;
+		return _rindexes[r];
 	}
 	@Override
 	public int setSearchIndex(int r, int ru){
-		return 0;
+		int insertionPoint = -1;
+		int result = Arrays.binarySearch(_rindexes, r);
+		if(result < 0) {
+			insertionPoint = -result - 1;
+			if (_rindexes[insertionPoint] == ru) {
+				return -1; // Return -1 if insertionPoint is ru
+			}
+			return insertionPoint;
+		}else{
+			if (_rindexes[result] == ru) {
+				return -1; // Return -1 if insertionPoint is ru
+			}
+			return result;
+		}
 	}
 
 	@Override
 	public int updateSearchIndex(int r, int ru){
-		System.out.println("*************");
-		for(int i = 0; i<_rindexes.length; i++){
-			System.out.println(_rindexes[i]);
+		int currentRow = _rindexes[r];
+		int i = r;
+		while (i < _rindexes.length && _rindexes[i] < ru){
+			if(_rindexes[i] != currentRow){
+				return i;
+			}
+			i++;
 		}
-		return 0;
+		return r;
 	}
 
 	@Override

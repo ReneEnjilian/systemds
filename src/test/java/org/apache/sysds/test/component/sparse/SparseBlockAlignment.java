@@ -175,19 +175,7 @@ public class SparseBlockAlignment extends AutomatedTestBase
 		try
 		{
 			//data generation
-			//double[][] A = getRandomMatrix(rows, cols, -10, 10, sparsity, 1234);
-			double[][] A = {
-				{0, 0, 0, 0, 0, 0}, // Row 1: All zeros
-				{10, 20, 0, 0, 0, 0}, // Row 2: Non-zero
-				{0, 0, 0, 0, 0, 0}, // Row 3: All zeros
-				{0, 30, 0, 40, 0, 0}, // Row 4: Non-zero
-				{0, 0, 0, 0, 0, 0}, // Row 5: All zeros
-				{0, 0, 50, 60, 70, 0}, // Row 6: Non-zero
-				{0, 0, 0, 0, 0, 0}, // Row 7: All zeros
-				{0, 0, 0, 0, 0, 80} // Row 8: Non-zero
-			};
-
-
+			double[][] A = getRandomMatrix(rows, cols, -10, 10, sparsity, 1234);
 
 			//init sparse block
 			SparseBlock sblock = null;

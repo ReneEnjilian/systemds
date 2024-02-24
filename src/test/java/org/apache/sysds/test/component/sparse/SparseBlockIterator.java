@@ -42,8 +42,8 @@ import org.apache.sysds.test.TestUtils;
  */
 public class SparseBlockIterator extends AutomatedTestBase 
 {
-	private final static int rows = 8; //324
-	private final static int cols = 6; //100
+	private final static int rows = 324; //324
+	private final static int cols = 100; //100
 	private final static int rlPartial = 134;
 	private final static double sparsity1 = 0.1;
 	private final static double sparsity2 = 0.2;
@@ -179,18 +179,8 @@ public class SparseBlockIterator extends AutomatedTestBase
 		try
 		{
 			//data generation
-			//double[][] A = getRandomMatrix(rows, cols, -10, 10, sparsity, 8765432);
-			double[][] A = {
-				{0, 0, 0, 0, 0, 0}, // Row 1: All zeros
-				{10, 20, 0, 0, 0, 0}, // Row 2: Non-zero
-				{0, 0, 0, 0, 0, 0}, // Row 3: All zeros
-				{0, 30, 0, 40, 0, 0}, // Row 4: Non-zero
-				{0, 0, 0, 0, 0, 0}, // Row 5: All zeros
-				{0, 0, 50, 60, 70, 0}, // Row 6: Non-zero
-				{0, 0, 0, 0, 0, 0}, // Row 7: All zeros
-				{0, 0, 0, 0, 0, 80} // Row 8: Non-zero
-			};
-			
+			double[][] A = getRandomMatrix(rows, cols, -10, 10, sparsity, 8765432);
+
 			//init sparse block
 			SparseBlock sblock = null;
 			MatrixBlock mbtmp = DataConverter.convertToMatrixBlock(A);

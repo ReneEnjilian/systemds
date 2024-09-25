@@ -66,6 +66,7 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ClassResolvers;
 
+@SuppressWarnings("deprecation")
 public class FederatedWorker {
 	protected static Logger log = Logger.getLogger(FederatedWorker.class);
 
@@ -99,8 +100,7 @@ public class FederatedWorker {
 		int par_conn = ConfigurationManager.getDMLConfig().getIntValue(DMLConfig.FEDERATED_PAR_CONN);
 		final int EVENT_LOOP_THREADS = (par_conn > 0) ? par_conn : InfrastructureAnalyzer.getLocalParallelism();
 		NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
-		ThreadPoolExecutor workerTPE = new ThreadPoolExecutor(1, Integer.MAX_VALUE, 10, TimeUnit.SECONDS,
-			new SynchronousQueue<Runnable>(true));
+		ThreadPoolExecutor workerTPE = new ThreadPoolExecutor(1, Integer.MAX_VALUE, 10, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(true));
 		NioEventLoopGroup workerGroup = new NioEventLoopGroup(EVENT_LOOP_THREADS, workerTPE);
 
 		final boolean ssl = ConfigurationManager.isFederatedSSL();
@@ -133,8 +133,7 @@ public class FederatedWorker {
 
 	public static class FederatedResponseEncoder extends ObjectEncoder {
 		@Override
-		protected ByteBuf allocateBuffer(ChannelHandlerContext ctx, Serializable msg, boolean preferDirect)
-			throws Exception {
+		protected ByteBuf allocateBuffer(ChannelHandlerContext ctx, Serializable msg, boolean preferDirect) throws Exception {
 			int initCapacity = 256; // default initial capacity
 			if(msg instanceof FederatedResponse) {
 				FederatedResponse response = (FederatedResponse) msg;
@@ -157,8 +156,7 @@ public class FederatedWorker {
 			boolean linReusePossible = (!ReuseCacheType.isNone() && msg instanceof FederatedResponse);
 			if(linReusePossible) {
 				FederatedResponse response = (FederatedResponse)msg;
-				if(response.getData() != null && response.getData().length != 0
-					&& response.getData()[0] instanceof CacheBlock<?>) {
+				if(response.getData() != null && response.getData().length != 0 && response.getData()[0] instanceof CacheBlock<?>) {
 					objLI = response.getLineageItem();
 
 					byte[] cachedBytes = LineageCache.reuseSerialization(objLI);
@@ -208,15 +206,13 @@ public class FederatedWorker {
 					final ChannelPipeline cp = ch.pipeline();
 					if(sslEnabled)
 						cp.addLast(cont2.newHandler(ch.alloc()));
-					
+
 					final Optional<ImmutablePair<ChannelInboundHandlerAdapter, ChannelOutboundHandlerAdapter>> compressionStrategy = FederationUtils.compressionStrategy();
 					cp.addLast("NetworkTrafficCounter", new NetworkTrafficCounter(FederatedStatistics::logWorkerTraffic));
 					cp.addLast("CompressionDecodingStartStatistics", new CompressionDecoderStartStatisticsHandler());
 					compressionStrategy.ifPresent(strategy -> cp.addLast("CompressionDecoder", strategy.left));
 					cp.addLast("CompressionDecoderEndStatistics", new CompressionDecoderEndStatisticsHandler());
-					cp.addLast("ObjectDecoder",
-						new ObjectDecoder(Integer.MAX_VALUE,
-							ClassResolvers.weakCachingResolver(ClassLoader.getSystemClassLoader())));
+					cp.addLast("ObjectDecoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingResolver(ClassLoader.getSystemClassLoader())));
 					cp.addLast("CompressionEncodingEndStatistics", new CompressionEncoderEndStatisticsHandler());
 					compressionStrategy.ifPresent(strategy -> cp.addLast("CompressionEncoder", strategy.right));
 					cp.addLast("CompressionEncodingStartStatistics", new CompressionEncoderStartStatisticsHandler());

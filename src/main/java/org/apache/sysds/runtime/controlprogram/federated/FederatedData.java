@@ -59,14 +59,13 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.util.concurrent.Promise;
 
+@SuppressWarnings("deprecation")
 public class FederatedData {
 	private static final Log LOG = LogFactory.getLog(FederatedData.class.getName());
 	private static final Set<InetSocketAddress> _allFedSites = new HashSet<>();
 
 	/** Thread pool specific for the federated requests */
 	private static EventLoopGroup workerGroup = null;
-
-
 
 	private final Types.DataType _dataType;
 	private final InetSocketAddress _address;
@@ -122,7 +121,7 @@ public class FederatedData {
 
 	/**
 	 * Make a copy of the <code>FederatedData</code> metadata, but use another varID (refer to another object on worker)
-	 * 
+	 *
 	 * @param varID the varID of the variable we refer to
 	 * @return new <code>FederatedData</code> with different varID set
 	 */
@@ -142,8 +141,7 @@ public class FederatedData {
 		if(!_dataType.isMatrix() && !_dataType.isFrame())
 			throw new DMLRuntimeException("Federated datatype \"" + _dataType.toString() + "\" is not supported.");
 		_varID = id;
-		FederatedRequest request = (mtd != null) ? new FederatedRequest(RequestType.READ_VAR, id,
-			mtd) : new FederatedRequest(RequestType.READ_VAR, id);
+		FederatedRequest request = (mtd != null) ? new FederatedRequest(RequestType.READ_VAR, id, mtd) : new FederatedRequest(RequestType.READ_VAR, id);
 		request.appendParam(_filepath);
 		request.appendParam(_dataType.name());
 		return executeFederatedOperation(request);
@@ -173,8 +171,7 @@ public class FederatedData {
 	 * @param request the requested operation
 	 * @return the response
 	 */
-	public static Future<FederatedResponse> executeFederatedOperation(InetSocketAddress address,
-		FederatedRequest... request) {
+	public static Future<FederatedResponse> executeFederatedOperation(InetSocketAddress address, FederatedRequest... request) {
 		return executeFederatedOperation(address, 1, request);
 	}
 
@@ -227,8 +224,7 @@ public class FederatedData {
 		}
 	}
 
-	private static ChannelInitializer<SocketChannel> createChannel(InetSocketAddress address,
-		DataRequestHandler handler) {
+	private static ChannelInitializer<SocketChannel> createChannel(InetSocketAddress address, DataRequestHandler handler) {
 		final int timeout = ConfigurationManager.getFederatedTimeout();
 		final boolean ssl = ConfigurationManager.isFederatedSSL();
 
@@ -275,8 +271,6 @@ public class FederatedData {
 		}
 	}
 
-
-
 	public static void resetFederatedSites() {
 		_allFedSites.clear();
 	}
@@ -313,7 +307,6 @@ public class FederatedData {
 		}
 	}
 
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -326,8 +319,7 @@ public class FederatedData {
 
 	public static class FederatedRequestEncoder extends ObjectEncoder {
 		@Override
-		protected ByteBuf allocateBuffer(ChannelHandlerContext ctx, Serializable msg, boolean preferDirect)
-			throws Exception {
+		protected ByteBuf allocateBuffer(ChannelHandlerContext ctx, Serializable msg, boolean preferDirect) throws Exception {
 			int initCapacity = 256; // default initial capacity
 			if(msg instanceof FederatedRequest[]) {
 				initCapacity = 0;

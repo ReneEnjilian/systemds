@@ -75,6 +75,7 @@ import org.apache.sysds.runtime.matrix.operators.SimpleOperator;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 
+@SuppressWarnings("deprecation")
 public class FederationUtils {
 	protected static Logger log = Logger.getLogger(FederationUtils.class);
 	private static final IDSequence _idSeq = new IDSequence();
@@ -122,13 +123,11 @@ public class FederationUtils {
 		FederatedRequest[] fr = new FederatedRequest[inst.length];
 		for(int j=0; j<inst.length; j++) {
 			for(int i = 0; i < varOldIn.length; i++) {
-				linst[j] = linst[j].replace(
-					Lop.OPERAND_DELIMITOR + varOldOut.getName() + Lop.DATATYPE_PREFIX,
+				linst[j] = linst[j].replace(Lop.OPERAND_DELIMITOR + varOldOut.getName() + Lop.DATATYPE_PREFIX,
 					Lop.OPERAND_DELIMITOR + String.valueOf(id) + Lop.DATATYPE_PREFIX);
 
 				if(varOldIn[i] != null) {
-					linst[j] = linst[j].replace(
-						Lop.OPERAND_DELIMITOR + varOldIn[i].getName() + Lop.DATATYPE_PREFIX,
+					linst[j] = linst[j].replace(Lop.OPERAND_DELIMITOR + varOldIn[i].getName() + Lop.DATATYPE_PREFIX,
 						Lop.OPERAND_DELIMITOR + String.valueOf(varNewIn[i]) + Lop.DATATYPE_PREFIX);
 					linst[j] = linst[j].replace("=" + varOldIn[i].getName(), "=" + String.valueOf(varNewIn[i])); //parameterized
 				}
@@ -142,23 +141,20 @@ public class FederationUtils {
 		String[] linst = inst;
 		FederatedRequest[] fr = new FederatedRequest[inst.length];
 		for(int j=0; j<inst.length; j++) {
-			linst[j] = InstructionUtils.replaceOperand(linst[j], 0, type == null ?
-				InstructionUtils.getExecType(linst[j]).name() : type.name());
+			linst[j] = InstructionUtils.replaceOperand(linst[j], 0, type == null ? InstructionUtils.getExecType(linst[j]).name() : type.name());
 			// replace inputs before before outputs in order to prevent conflicts
 			// on outputId matching input literals (due to a mix of input instructions,
 			// have to apply this replacement even for literal inputs)
 			for(int i = 0; i < varOldIn.length; i++) {
 				if( varOldIn[i] != null ) {
-					linst[j] = linst[j].replace(
-						Lop.OPERAND_DELIMITOR + varOldIn[i].getName() + Lop.DATATYPE_PREFIX,
+					linst[j] = linst[j].replace(Lop.OPERAND_DELIMITOR + varOldIn[i].getName() + Lop.DATATYPE_PREFIX,
 						Lop.OPERAND_DELIMITOR + String.valueOf(varNewIn[i]) + Lop.DATATYPE_PREFIX);
 					// handle parameterized builtin functions
 					linst[j] = linst[j].replace("=" + varOldIn[i].getName(), "=" + String.valueOf(varNewIn[i]));
 				}
 			}
 			for(int i = 0; i < varOldIn.length; i++) {
-				linst[j] = linst[j].replace(
-					Lop.OPERAND_DELIMITOR + varOldOut.getName() + Lop.DATATYPE_PREFIX,
+				linst[j] = linst[j].replace(Lop.OPERAND_DELIMITOR + varOldOut.getName() + Lop.DATATYPE_PREFIX,
 					Lop.OPERAND_DELIMITOR + String.valueOf(outputId) + Lop.DATATYPE_PREFIX);
 			}
 
@@ -173,8 +169,7 @@ public class FederationUtils {
 		linst = linst.replace(Lop.OPERAND_DELIMITOR+varOldOut.getName()+Lop.DATATYPE_PREFIX, Lop.OPERAND_DELIMITOR+outputId+Lop.DATATYPE_PREFIX);
 		for(int i=0; i<varOldIn.length; i++)
 			if( varOldIn[i] != null ) {
-				linst = linst.replace(
-					Lop.OPERAND_DELIMITOR+varOldIn[i].getName()+Lop.DATATYPE_PREFIX,
+				linst = linst.replace(Lop.OPERAND_DELIMITOR+varOldIn[i].getName()+Lop.DATATYPE_PREFIX,
 					Lop.OPERAND_DELIMITOR+(varNewIn[i])+Lop.DATATYPE_PREFIX);
 				linst = linst.replace("="+varOldIn[i].getName(), "="+(varNewIn[i])); //parameterized
 			}
@@ -205,8 +200,7 @@ public class FederationUtils {
 			long size = 0;
 			for(int i=0; i<ffr.length; i++) {
 				Object input = ffr[i].get().getData()[0];
-				MatrixBlock tmp = (input instanceof ScalarObject) ?
-					new MatrixBlock(((ScalarObject)input).getDoubleValue()) : (MatrixBlock) input;
+				MatrixBlock tmp = (input instanceof ScalarObject) ? new MatrixBlock(((ScalarObject)input).getDoubleValue()) : (MatrixBlock) input;
 				size += ranges[i].getSize(0);
 				sop1 = sop1.setConstant(ranges[i].getSize(0));
 				tmp = tmp.scalarOperations(sop1, new MatrixBlock());
@@ -237,9 +231,7 @@ public class FederationUtils {
 		// TODO handle non-contiguous cases
 		try {
 			MatrixBlock[] tmp = getResults(ffr);
-			return tmp[0].append(
-				Arrays.copyOfRange(tmp, 1, tmp.length),
-				new MatrixBlock(), cbind);
+			return tmp[0].append(Arrays.copyOfRange(tmp, 1, tmp.length), new MatrixBlock(), cbind);
 		}
 		catch(Exception ex) {
 			throw new DMLRuntimeException(ex);
@@ -251,8 +243,7 @@ public class FederationUtils {
 			if (!fedType.isPresent() || fedType.get() == FType.OTHER) {
 				double res = isMin ? Double.MAX_VALUE : -Double.MAX_VALUE;
 				for (Future<FederatedResponse> fr : ffr) {
-					double v = isScalar ? ((ScalarObject) fr.get().getData()[0]).getDoubleValue() :
-						isMin ? ((MatrixBlock) fr.get().getData()[0]).min() : ((MatrixBlock) fr.get().getData()[0]).max();
+					double v = isScalar ? ((ScalarObject) fr.get().getData()[0]).getDoubleValue() : isMin ? ((MatrixBlock) fr.get().getData()[0]).min() : ((MatrixBlock) fr.get().getData()[0]).max();
 					res = isMin ? Math.min(res, v) : Math.max(res, v);
 				}
 				return new MatrixBlock(1, 1, res);
@@ -263,10 +254,8 @@ public class FederationUtils {
 				for (int i = 0; i < ffr.length - 1; i++)
 					for (int j = 0; j < dim; j++)
 						if (fedType.get() == FType.COL)
-							tmp[i + 1].set(j, 0, isMin ? Double.min(tmp[i].get(j, 0), tmp[i + 1].get(j, 0)) :
-								Double.max(tmp[i].get(j, 0), tmp[i + 1].get(j, 0)));
-						else tmp[i + 1].set(0, j, isMin ? Double.min(tmp[i].get(0, j), tmp[i + 1].get(0, j)) :
-							Double.max(tmp[i].get(0, j), tmp[i + 1].get(0, j)));
+							tmp[i + 1].set(j, 0, isMin ? Double.min(tmp[i].get(j, 0), tmp[i + 1].get(j, 0)) : Double.max(tmp[i].get(j, 0), tmp[i + 1].get(j, 0)));
+						else tmp[i + 1].set(0, j, isMin ? Double.min(tmp[i].get(0, j), tmp[i + 1].get(0, j)) : Double.max(tmp[i].get(0, j), tmp[i + 1].get(0, j)));
 				return tmp[ffr.length-1];
 			}
 		}
@@ -278,15 +267,8 @@ public class FederationUtils {
 	public static MatrixBlock aggProd(Future<FederatedResponse>[] ffr, FederationMap fedMap, AggregateUnaryOperator aop) {
 		try {
 			boolean rowFed = fedMap.getType() == FType.ROW;
-			MatrixBlock ret = aop.isFullAggregate() ? (rowFed ?
-				new MatrixBlock(ffr.length, 1, 1.0) : new MatrixBlock(1, ffr.length, 1.0)) :
-				(rowFed ?
-				new MatrixBlock(ffr.length, (int) fedMap.getFederatedRanges()[0].getEndDims()[1], 1.0) :
-				new MatrixBlock((int) fedMap.getFederatedRanges()[0].getEndDims()[0], ffr.length, 1.0));
-			MatrixBlock res = aop.isFullAggregate() ? new MatrixBlock(1, 1, 1.0) :
-				(rowFed ?
-				new MatrixBlock(1, (int) fedMap.getFederatedRanges()[0].getEndDims()[1], 1.0) :
-				new MatrixBlock((int) fedMap.getFederatedRanges()[0].getEndDims()[0], 1, 1.0));
+			MatrixBlock ret = aop.isFullAggregate() ? (rowFed ? new MatrixBlock(ffr.length, 1, 1.0) : new MatrixBlock(1, ffr.length, 1.0)) : (rowFed ? new MatrixBlock(ffr.length, (int) fedMap.getFederatedRanges()[0].getEndDims()[1], 1.0) : new MatrixBlock((int) fedMap.getFederatedRanges()[0].getEndDims()[0], ffr.length, 1.0));
+			MatrixBlock res = aop.isFullAggregate() ? new MatrixBlock(1, 1, 1.0) : (rowFed ? new MatrixBlock(1, (int) fedMap.getFederatedRanges()[0].getEndDims()[1], 1.0) : new MatrixBlock((int) fedMap.getFederatedRanges()[0].getEndDims()[0], 1, 1.0));
 
 			for(int i = 0; i < ffr.length; i++) {
 				MatrixBlock tmp = (MatrixBlock) ffr[i].get().getData()[0];
@@ -313,8 +295,7 @@ public class FederationUtils {
 				size = map.getFederatedRanges()[i-1].getEndDimsInt()[1];
 				for(int j = 0; j < prev.getNumRows(); j++) {
 					next.set(j, 0, next.get(j, 0) + size);
-					if((prev.get(j, 1) > next.get(j, 1) && !isMin) ||
-						(prev.get(j, 1) < next.get(j, 1) && isMin)) {
+					if((prev.get(j, 1) > next.get(j, 1) && !isMin) || (prev.get(j, 1) < next.get(j, 1) && isMin)) {
 						next.set(j, 0, prev.get(j, 0));
 						next.set(j, 1, prev.get(j, 1));
 					}
@@ -379,13 +360,10 @@ public class FederationUtils {
 	}
 
 	public static ScalarObject aggScalar(AggregateUnaryOperator aop, Future<FederatedResponse>[] ffr, Future<FederatedResponse>[] meanFfr, FederationMap map) {
-		if(!(aop.aggOp.increOp.fn instanceof KahanFunction || aop.aggOp.increOp.fn instanceof CM ||
-			(aop.aggOp.increOp.fn instanceof Builtin &&
-				(((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MIN ||
-				((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MAX)
-				|| aop.aggOp.increOp.fn instanceof Mean))) {
-			throw new DMLRuntimeException("Unsupported aggregation operator: "
-				+ aop.aggOp.increOp.getClass().getSimpleName());
+		if(!(aop.aggOp.increOp.fn instanceof KahanFunction || aop.aggOp.increOp.fn instanceof CM || (aop.aggOp.increOp.fn instanceof Builtin &&
+			(((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MIN ||
+				((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MAX) || aop.aggOp.increOp.fn instanceof Mean))) {
+			throw new DMLRuntimeException("Unsupported aggregation operator: " + aop.aggOp.increOp.getClass().getSimpleName());
 		}
 
 		try {
@@ -436,17 +414,15 @@ public class FederationUtils {
 			return aggAdd(ffr);
 		else if( aop.aggOp.increOp.fn instanceof Mean )
 			return aggMean(ffr, map);
-		else if (aop.aggOp.increOp.fn instanceof Builtin &&
-			(((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MIN ||
-				((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MAX)) {
+		else if (aop.aggOp.increOp.fn instanceof Builtin && (((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MIN ||
+			((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MAX)) {
 			boolean isMin = ((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MIN;
 			return aggMinMax(ffr,isMin,false, Optional.of(map.getType()));
 		} else if(aop.aggOp.increOp.fn instanceof CM) {
 			return aggVar(ffr, meanFfr, map, aop.isRowAggregate(), !(aop.isColAggregate() || aop.isRowAggregate())); //TODO
 		}
 		else
-			throw new DMLRuntimeException("Unsupported aggregation operator: "
-				+ aop.aggOp.increOp.fn.getClass().getSimpleName());
+			throw new DMLRuntimeException("Unsupported aggregation operator: " + aop.aggOp.increOp.fn.getClass().getSimpleName());
 	}
 
 	public static void waitFor(List<Future<FederatedResponse>> responses) {
@@ -472,12 +448,8 @@ public class FederationUtils {
 
 	public static ScalarObject aggScalar(AggregateUnaryOperator aop, Future<FederatedResponse>[] ffr, FederationMap map) {
 		if(!(aop.aggOp.increOp.fn instanceof KahanFunction || (aop.aggOp.increOp.fn instanceof Builtin &&
-			(((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MIN
-			|| ((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MAX)
-			|| aop.aggOp.increOp.fn instanceof Mean
-			|| aop.aggOp.increOp.fn instanceof Multiply))) {
-			throw new DMLRuntimeException("Unsupported aggregation operator: "
-				+ aop.aggOp.increOp.getClass().getSimpleName());
+			(((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MIN || ((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MAX) || aop.aggOp.increOp.fn instanceof Mean || aop.aggOp.increOp.fn instanceof Multiply))) {
+			throw new DMLRuntimeException("Unsupported aggregation operator: " + aop.aggOp.increOp.getClass().getSimpleName());
 		}
 
 		try {
@@ -487,8 +459,7 @@ public class FederationUtils {
 				for(int i = 0; i < ffr.length; i++)
 					ret.set(i, 0, ((ScalarObject)ffr[i].get().getData()[0]).getDoubleValue());
 				LibMatrixAgg.aggregateUnaryMatrix(ret, res,
-					new AggregateUnaryOperator(new AggregateOperator(1, Multiply.getMultiplyFnObject()),
-						ReduceAll.getReduceAllFnObject()));
+					new AggregateUnaryOperator(new AggregateOperator(1, Multiply.getMultiplyFnObject()), ReduceAll.getReduceAllFnObject()));
 				return new DoubleObject(res.get(0, 0));
 			}
 			else if(aop.aggOp.increOp.fn instanceof Builtin){
@@ -510,7 +481,7 @@ public class FederationUtils {
 			throw new DMLRuntimeException(ex);
 		}
 	}
-	
+
 	public static boolean aggBooleanScalar(Future<FederatedResponse>[] tmp) {
 		boolean ret = false;
 		try {
@@ -522,7 +493,7 @@ public class FederationUtils {
 		}
 		return ret;
 	}
-	
+
 	public static MatrixBlock aggMatrix(AggregateUnaryOperator aop, Future<FederatedResponse>[] ffr, FederationMap map) {
 		if (aop.isRowAggregate() && map.getType() == FType.ROW)
 			return bind(ffr, false);
@@ -541,25 +512,21 @@ public class FederationUtils {
 				boolean isMin = ((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MIN;
 				return aggMinMax(ffr,isMin,false, Optional.of(map.getType()));
 			}
-			else if((((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MININDEX)
-				|| (((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MAXINDEX)) {
+			else if((((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MININDEX) || (((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MAXINDEX)) {
 				boolean isMin = ((Builtin) aop.aggOp.increOp.fn).getBuiltinCode() == BuiltinCode.MININDEX;
 				return aggMinMaxIndex(ffr, isMin, map);
 			}
-			else throw new DMLRuntimeException("Unsupported aggregation operator: "
-					+ aop.aggOp.increOp.fn.getClass().getSimpleName());
+			else throw new DMLRuntimeException("Unsupported aggregation operator: " + aop.aggOp.increOp.fn.getClass().getSimpleName());
 		}
 		else
-			throw new DMLRuntimeException("Unsupported aggregation operator: "
-				+ aop.aggOp.increOp.fn.getClass().getSimpleName());
+			throw new DMLRuntimeException("Unsupported aggregation operator: " + aop.aggOp.increOp.fn.getClass().getSimpleName());
 	}
 
 	public static FederationMap federateLocalData(CacheableData<?> data) {
 		long id = FederationUtils.getNextFedDataID();
 		FederatedLocalData federatedLocalData = new FederatedLocalData(id, data);
 		List<Pair<FederatedRange, FederatedData>> fedMap = new ArrayList<>();
-		fedMap.add(Pair.of(
-			new FederatedRange(new long[2], new long[] {data.getNumRows(), data.getNumColumns()}),
+		fedMap.add(Pair.of(new FederatedRange(new long[2], new long[] {data.getNumRows(), data.getNumColumns()}),
 			federatedLocalData));
 		return new FederationMap(id, fedMap);
 	}
@@ -572,8 +539,7 @@ public class FederationUtils {
 	 * @throws Exception in case of problems with getting data from responses
 	 */
 	public static MatrixBlock bindResponses(List<Pair<FederatedRange, Future<FederatedResponse>>> readResponses, long[] dims)
-		throws Exception
-	{
+		throws Exception {
 		long totalNNZ = 0;
 		for(Pair<FederatedRange, Future<FederatedResponse>> readResponse : readResponses) {
 			FederatedResponse response = readResponse.getRight().get();
@@ -609,8 +575,7 @@ public class FederationUtils {
 	}
 
 	public static ObjectDecoder decoder() {
-		return new ObjectDecoder(Integer.MAX_VALUE,
-			ClassResolvers.weakCachingResolver(ClassLoader.getSystemClassLoader()));
+		return new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingResolver(ClassLoader.getSystemClassLoader()));
 	}
 
 	public static Optional<ChannelOutboundHandlerAdapter> compressionEncoder() {

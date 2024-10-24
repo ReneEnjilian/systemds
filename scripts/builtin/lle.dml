@@ -18,3 +18,7 @@
 # under the License.
 #
 #-------------------------------------------------------------
+
+
+m_lle = function(Matrix[Double] X, Integer K,
+    Integer M, )

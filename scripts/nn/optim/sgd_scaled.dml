@@ -1,0 +1,40 @@
+#-------------------------------------------------------------
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+#-------------------------------------------------------------
+
+/*
+ * Scaled Gradient Descent (ScaledGD) optimizer.
+ */
+
+update = function(matrix[double] L, matrix[double] R matrix[double] dL,
+                matrix[double] dR, double lr)
+    return (matrix[double] L, matrix[double] R) {
+
+    # Step 1: Compute scaling matrices (preconditioners)
+    R_inv = inv(t(R) %*% R)     # (r x r) inverse of Rᵀ * R
+    L_inv = inv(t(L) %*% L)     # (r x r) inverse of Lᵀ * L
+
+    # Step 2: Update L with scaled gradient descent
+    L = L - lr %*% (dL %*% R_inv)    # Scale gradient for L by (Rᵀ * R)⁻¹
+
+    # Step 3: Update R with scaled gradient descent
+    R = R - lr %*% (dR %*% L_inv)
+
+}
